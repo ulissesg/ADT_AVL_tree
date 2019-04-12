@@ -9,6 +9,7 @@ No *alocaNo(){
     no->chave = NULL;
     no->esquerda = NULL;
     no->direita = NULL;
+    no->h = 0;
     return no;
 }
 

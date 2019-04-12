@@ -65,5 +65,19 @@ int numeroNo(Arvore *a);
 
 int contaNo(No *no);
 
+// AVL
+
+void rotacaoSimplesEsquerda (No ** no);
+
+void rotacaoSimplesDireita (No ** no);
+
+void rotacaoDuplaEsquerda (No ** no);
+
+void rotacaoDuplaDireita (No ** no);
+
+void checkAVL (No ** no);
+
+void atualizarAltura (No ** no);
+
 
 #endif //ARVORE_ARVORE_H

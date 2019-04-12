@@ -333,3 +333,66 @@ int contaNo(No *x){
     }
     return num;
 }
+
+// AVL
+
+void rotacaoSimplesEsquerda (No ** no){
+    No *aux = (*no)->esquerda->direita;
+    (*no)->esquerda->direita = (*no);
+    (*no)= (*no)->esquerda;
+    (*no)->direita->esquerda = aux;
+}
+
+void rotacaoSimplesDireita (No ** no){
+    No *aux = (*no)->direita->esquerda;
+    (*no)->direita->esquerda = (*no);
+    (*no)= (*no)->direita;
+    (*no)->esquerda->direita = aux;
+}
+
+void rotacaoDuplaEsquerda (No ** no){
+    rotacaoSimplesDireita((*no)->direita);
+    rotacaoSimplesEsquerda((*no));
+}
+
+void rotacaoDuplaDireita (No ** no){
+    rotacaoSimplesEsquerda((*no)->esquerda);
+    rotacaoSimplesDireita((*no));
+}
+
+void checkAVL (No ** no){
+
+    int b= (*no)->direita->h - (*no)->esquerda->h;
+
+    if(b >= 2){
+        int b2 = (*no)->direita->direita->h - (*no)->direita->esquerda->h;
+
+        if (b2 >= 0){
+            rotacaoSimplesEsquerda(no);// talvez *no
+        }
+        else {
+            rotacaoDuplaEsquerda(no);
+        }
+    }
+    else if (b <= -2){
+        int b2 = (*no)->esquerda->direita->h - (*no)->esquerda->esquerda->h;
+
+        if (b2 <= 0){
+            rotacaoSimplesDireita(no);
+        }
+        else {
+            rotacaoDuplaDireita(no);
+        }
+    }
+
+    atualizarAltura(no);
+}
+
+void atualizarAltura (No ** no){
+    if ((*no)->direita->h >= (*no)->esquerda->h){
+        (*no)->h = (*no)->direita->h + 1;
+    }
+    else{
+        (*no)->h = (*no)->esquerda->h + 1;
+    }
+}

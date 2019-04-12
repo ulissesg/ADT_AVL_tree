@@ -11,6 +11,7 @@
 typedef struct no No;
 
 struct no{
+    int h;
     int chave;
     No *direita;
     No *esquerda;
