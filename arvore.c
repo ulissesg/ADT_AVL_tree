@@ -48,7 +48,7 @@ void contruiArvStringNo( No *no, char arvoreString[100], int size, int posicao, 
     if (posicao < size){
         if (arvoreString[posicao] == '('){
             atualizarAltura(no);
-            checkAVL(*raiz); //arrumar aqui
+            checkAVL(&(raiz)); //arrumar aqui
             if (arvoreString[posicao-1] == ')' || arvoreString[posicao+1] == '/'){
                 no->direita = alocaNo();
                 if (arvoreString[posicao+1] == '/'){
@@ -120,10 +120,12 @@ void insereVerificaAux(No *x, int num){
         if (num > x->chave && x->direita == NULL){
             x->direita = alocaNo();
             x->direita->chave = num;
+            checkAVL(&(x));
         }
         else if(num < x->chave && x->esquerda == NULL){
             x->esquerda = alocaNo();
             x->esquerda->chave = num;
+            checkAVL(&(x));
         }
         else if(num > x->chave){
             insereVerificaAux(x->direita, num);
@@ -207,7 +209,7 @@ void removeNoAux(No* x, int num){
         removeNoDoisFilhos(x, no, pai);
     }
     atualizarAltura(no);
-    checkAVL(no);
+    checkAVL(&(no));
 }
 
 void removeNoFolha(No* no, No* pai){
@@ -345,7 +347,7 @@ void insereAVL(Arvore *a, int num){
         a->raiz->chave = num;
     }
     else {
-        insereAVLAux(a->raiz, num);
+        insereAVLAux(&(a->raiz), num);
     }
 }
 
@@ -360,13 +362,13 @@ void insereAVLAux(No **x, int num){
         (*x)->esquerda->chave = num;
     }
     else if(num > (*x)->chave){
-        insereVerificaAux((*x)->direita, num);
+        insereAVLAux(&(*x)->direita, num);
     }
     else if(num < (*x)->chave){
-        insereVerificaAux((*x)->esquerda, num);
+        insereAVLAux(&(*x)->esquerda, num);
     }
-    atualizarAltura(x);
-    checkAVL(*x);
+    atualizarAltura(*x);
+    checkAVL(&(*x));
 }
 
 void rotacaoSimplesEsquerda (No ** no){
@@ -374,6 +376,9 @@ void rotacaoSimplesEsquerda (No ** no){
     (*no)->esquerda->direita = (*no);
     (*no)= (*no)->esquerda;
     (*no)->direita->esquerda = aux;
+    atualizarAltura((*no)->direita);
+    atualizarAltura(*no);
+
 }
 
 void rotacaoSimplesDireita (No ** no){
@@ -381,47 +386,73 @@ void rotacaoSimplesDireita (No ** no){
     (*no)->direita->esquerda = (*no);
     (*no)= (*no)->direita;
     (*no)->esquerda->direita = aux;
+    atualizarAltura((*no)->esquerda);
+    atualizarAltura(*no);
 }
 
 void rotacaoDuplaEsquerda (No ** no){
-    rotacaoSimplesDireita((*no)->direita);
-    rotacaoSimplesEsquerda((*no));
+    rotacaoSimplesDireita(&((*no)->esquerda));
+    rotacaoSimplesEsquerda(&(*no));
 }
 
 void rotacaoDuplaDireita (No ** no){
-    rotacaoSimplesEsquerda((*no)->esquerda);
-    rotacaoSimplesDireita((*no));
+    rotacaoSimplesEsquerda(&(*no)->direita);
+    rotacaoSimplesDireita(&(*no));
+}
+
+int contaAVL ( No ** no){
+
+    if (((*no)->direita) != NULL && (*no)->esquerda != NULL){
+        return (*no)->direita->h - (*no)->esquerda->h;
+    }
+
+    else if (((*no)->direita) == NULL && (*no)->esquerda == NULL){
+        return 0;
+    }
+
+    else if (((*no)->direita) == NULL || (*no)->esquerda == NULL){
+
+        if (((*no)->direita) == NULL){
+            return (0-1) - (*no)->esquerda->h;
+        }
+
+        if (((*no)->esquerda) == NULL){
+            return (*no)->direita->h + 1;
+        }
+    }
+
 }
 
 void checkAVL (No ** no){
 
-    int b= (*no)->direita->h - (*no)->esquerda->h;
+    int b = contaAVL(&(*no));
+//    int b  = (*no)->h;
 
     if(b >= 2){
-        int b2 = (*no)->direita->direita->h - (*no)->direita->esquerda->h;
+        int b2 = contaAVL(&(*no)->direita);
 
         if (b2 >= 0){
-            rotacaoSimplesEsquerda(*no);// talvez *no
+            rotacaoSimplesDireita(&(*no));
         }
         else {
-            rotacaoDuplaEsquerda(*no);
+            rotacaoDuplaDireita(&(*no));
         }
     }
     else if (b <= -2){
-        int b2 = (*no)->esquerda->direita->h - (*no)->esquerda->esquerda->h;
-
+        int b2 = contaAVL(&(*no)->esquerda);
         if (b2 <= 0){
-            rotacaoSimplesDireita(*no);
+            rotacaoSimplesEsquerda(&(*no));
         }
         else {
-            rotacaoDuplaDireita(*no);
+            rotacaoDuplaEsquerda(&(*no));
         }
     }
 
-    atualizarAltura(no);
+    atualizarAltura(*no);
 }
 
 void atualizarAltura (No * no){
+
     if ((no->direita != NULL) && (no->esquerda != NULL)){
         if (no->direita->h >= no->esquerda->h){
             no->h = no->direita->h + 1;
@@ -431,7 +462,17 @@ void atualizarAltura (No * no){
         }
     }
 
-    // caso tenha um vilho
-    //caso tenha os dois filhos
+    else if ((no->direita == NULL) && (no->esquerda == NULL)){
+        no->h = 0;
+    }
 
+    else if ((no->direita == NULL) || (no->esquerda == NULL)){
+        if (no->direita == NULL){
+            no->h = no->esquerda->h + 1;
+        }
+
+        else if (no->esquerda == NULL){
+            no->h = no->direita->h + 1;
+        }
+    }
 }

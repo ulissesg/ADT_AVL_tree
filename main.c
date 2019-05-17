@@ -19,23 +19,23 @@ int main() {
 
 //    construirArv(arv);
 
-//    insereVerifica(arv, 8);
-//    insereVerifica(arv, 3);
-//    insereVerifica(arv, 5);
-//    insereVerifica(arv, 2);
-//    insereVerifica(arv, 4);
-//    insereVerifica(arv, 1);
-//    insereVerifica(arv, 22);
-//    insereVerifica(arv, 9);
-//    insereVerifica(arv, 10);
-//    insereVerifica(arv, 11);
-//    insereVerifica(arv, 56);
-//    insereVerifica(arv, 96);
+    insereAVL(arv, 8);
+    insereAVL(arv, 3);
+    insereAVL(arv, 5);
+    insereAVL(arv, 2);
+    insereAVL(arv, 4);
+    insereAVL(arv, 1);
+    insereAVL(arv, 22);
+    insereAVL(arv, 9);
+    insereAVL(arv, 10);
+    insereAVL(arv, 11);
+    insereAVL(arv, 56);
+    insereAVL(arv, 96);
 
 
-char string[1000];
-scanf("%s", string);
-int n = strlen(string);
+//char string[1000];
+//scanf("%s", string);
+//int n = strlen(string);
 //lerString(string, x, n, 0, x);
 //construiArvString(arv, string, n, 0);
 
@@ -46,7 +46,7 @@ int n = strlen(string);
 //    printf("\nno busca pai: %d\n", x->chave);
 
 //    removeNo(arv, 5);
-    removeNo(arv, 2);
+//    removeNo(arv, 2);
 
     imprimeArvVisual(arv);
 

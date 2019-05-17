@@ -79,6 +79,8 @@ void rotacaoDuplaEsquerda (No ** no);
 
 void rotacaoDuplaDireita (No ** no);
 
+int contaAVL ( No ** no);
+
 void checkAVL (No ** no);
 
 void atualizarAltura (No * no);
