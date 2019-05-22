@@ -85,5 +85,9 @@ void checkAVL (No ** no);
 
 void atualizarAltura (No * no);
 
+void removeAVL(Arvore *arv, int num);
+
+No * removeAVLAux(Arvore * arv, No *no, int num, No * pai);
+
 
 #endif //ARVORE_ARVORE_H

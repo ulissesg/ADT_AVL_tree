@@ -32,6 +32,11 @@ int main() {
     insereAVL(arv, 56);
     insereAVL(arv, 96);
 
+    removeAVL(arv, 10);
+    removeAVL(arv, 11);
+    removeAVL(arv, 22);
+    removeAVL(arv, 96);
+
 
 //char string[1000];
 //scanf("%s", string);

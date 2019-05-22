@@ -402,25 +402,26 @@ void rotacaoDuplaDireita (No ** no){
 
 int contaAVL ( No ** no){
 
-    if (((*no)->direita) != NULL && (*no)->esquerda != NULL){
-        return (*no)->direita->h - (*no)->esquerda->h;
-    }
-
-    else if (((*no)->direita) == NULL && (*no)->esquerda == NULL){
-        return 0;
-    }
-
-    else if (((*no)->direita) == NULL || (*no)->esquerda == NULL){
-
-        if (((*no)->direita) == NULL){
-            return (0-1) - (*no)->esquerda->h;
+    if ((*no) != NULL){
+        if (((*no)->direita) != NULL && (*no)->esquerda != NULL){
+            return (*no)->direita->h - (*no)->esquerda->h;
         }
 
-        if (((*no)->esquerda) == NULL){
-            return (*no)->direita->h + 1;
+        else if (((*no)->direita) == NULL && (*no)->esquerda == NULL){
+            return 0;
+        }
+
+        else if (((*no)->direita) == NULL || (*no)->esquerda == NULL){
+
+            if (((*no)->direita) == NULL){
+                return (0-1) - (*no)->esquerda->h;
+            }
+
+            if (((*no)->esquerda) == NULL){
+                return (*no)->direita->h + 1;
+            }
         }
     }
-
 }
 
 void checkAVL (No ** no){
@@ -453,26 +454,70 @@ void checkAVL (No ** no){
 
 void atualizarAltura (No * no){
 
-    if ((no->direita != NULL) && (no->esquerda != NULL)){
-        if (no->direita->h >= no->esquerda->h){
-            no->h = no->direita->h + 1;
+    if (no != NULL) {
+        if ((no->direita != NULL) && (no->esquerda != NULL)){
+            if (no->direita->h >= no->esquerda->h){
+                no->h = no->direita->h + 1;
+            }
+            else{
+                no->h = no->esquerda->h + 1;
+            }
         }
-        else{
-            no->h = no->esquerda->h + 1;
+
+        else if ((no->direita == NULL) && (no->esquerda == NULL)){
+            no->h = 0;
+        }
+
+        else if ((no->direita == NULL) || (no->esquerda == NULL)){
+            if (no->direita == NULL){
+                no->h = no->esquerda->h + 1;
+            }
+
+            else if (no->esquerda == NULL){
+                no->h = no->direita->h + 1;
+            }
         }
     }
 
-    else if ((no->direita == NULL) && (no->esquerda == NULL)){
-        no->h = 0;
+
+}
+
+void removeAVL(Arvore *arv, int num){
+    No *pai = buscaNoPaiAux(arv->raiz, num);
+    No* avo = buscaNoPaiAux(arv->raiz, pai->chave);
+    if (avo->direita == pai){
+        avo->direita = removeAVLAux(arv,arv->raiz, num, pai);
+    }else if (avo->esquerda == pai){
+        avo->esquerda = removeAVLAux(arv,arv->raiz, num, pai);
     }
 
-    else if ((no->direita == NULL) || (no->esquerda == NULL)){
-        if (no->direita == NULL){
-            no->h = no->esquerda->h + 1;
-        }
 
-        else if (no->esquerda == NULL){
-            no->h = no->direita->h + 1;
+}
+
+No * removeAVLAux(Arvore * arv, No *no, int num, No * pai){
+
+
+    if (no != NULL){
+        if (no->chave == num){
+
+            if(no->direita == NULL && no->esquerda == NULL){
+                removeNoFolha(no, pai);
+            }
+            else if (no->direita == NULL || no->esquerda == NULL){
+                removeNoUmFilho(no, pai);
+            }
+            else if (no->direita != NULL && no->esquerda != NULL){
+                removeNoDoisFilhos(no, no, pai);
+            }
+            atualizarAltura(pai);
+            checkAVL(&(pai));
+            return pai;
+        }
+        else if (no->chave > num){
+            removeAVLAux(arv, no->esquerda, num, pai);
+        }
+        else if (no->chave < num){
+            removeAVLAux(arv, no->direita, num, pai);
         }
     }
 }
