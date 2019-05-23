@@ -32,10 +32,11 @@ int main() {
     insereAVL(arv, 56);
     insereAVL(arv, 96);
 
+    removeAVL(arv, 1);
+    removeAVL(arv, 2);
+    removeAVL(arv, 3);
     removeAVL(arv, 10);
-    removeAVL(arv, 11);
-    removeAVL(arv, 22);
-    removeAVL(arv, 96);
+    removeAVL(arv, 56);
 
 
 //char string[1000];

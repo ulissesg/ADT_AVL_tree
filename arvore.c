@@ -190,108 +190,62 @@ No* buscaNoAux(No* no, int num){
     printf("\n numero nao encontrado !\n");
 }
 
-void removeNo(Arvore *a, int num){
-    removeNoAux(a->raiz, num);
+//void removeNo(Arvore *a, int num){
+//    removeNoAux(a->raiz, num);
+//}
+
+//void removeNoAux(No* x, int num){
+//
+//    No *no = buscaNoAux(x, num);
+//    No *pai = buscaNoPaiAux(x, num);
+//
+//    if(no->direita == NULL && no->esquerda == NULL){
+//        removeNoFolha(&(no);
+//    }
+//    else if (no->direita == NULL || no->esquerda == NULL){
+//       removeNoUmFilho(no, pai);
+//    }
+//    else if (no->direita != NULL && no->esquerda != NULL){
+//        removeNoDoisFilhos(x, no, pai);
+//    }
+//    atualizarAltura(no);
+//    checkAVL(&(no));
+//}
+
+void removeNoFolha(No ** no){
+    desalocaNo(*no);
+    (*no) = NULL;
 }
 
-void removeNoAux(No* x, int num){
-
-    No *no = buscaNoAux(x, num);
-    No *pai = buscaNoPaiAux(x, num);
-
-    if(no->direita == NULL && no->esquerda == NULL){
-        removeNoFolha(no, pai);
+void removeNoUmFilho(No** no){
+    No * aux = (*no);
+    if ((*no)->direita != NULL){
+        *no = (*no)->direita;
+    }else if ((*no)->esquerda != NULL){
+        *no = (*no)->esquerda;
     }
-    else if (no->direita == NULL || no->esquerda == NULL){
-       removeNoUmFilho(no, pai);
-    }
-    else if (no->direita != NULL && no->esquerda != NULL){
-        removeNoDoisFilhos(x, no, pai);
-    }
-    atualizarAltura(no);
-    checkAVL(&(no));
+    desalocaNo(aux);
 }
 
-void removeNoFolha(No* no, No* pai){
-    if (pai->esquerda == no){
-        pai->esquerda = NULL;
-    }
-    else if (pai->direita == no){
-        pai->direita = NULL;
-    }
-    desalocaNo(no);
-}
+void removeNoDoisFilhos(No** no){
 
-void removeNoUmFilho(No* no, No* pai){
-    if (no->direita != NULL){
-        if (pai->direita == no){
-            pai->direita = no->direita;
-        }
-        else if (pai->esquerda == no){
-            pai->esquerda = no->direita;
-        }
-    }
-    else if (no->esquerda != NULL){
-        if (pai->esquerda == no){
-            pai->esquerda = no->esquerda;
-        }
-        else if (pai->direita == no){
-            pai->direita = no->esquerda;
-        }
-    }
-    if (pai->esquerda->chave == no->chave){
-        pai->esquerda = NULL;
-    }
-    else if (pai->direita->chave == no->chave){
-        pai->direita = NULL;
-    }
-    desalocaNo(no);
-}
-
-void removeNoDoisFilhos(No* x,No* no, No* pai){
-
-    No* sucessor = menorSucessor(no);
-    No* paiSucessor = buscaNoPaiAux(x, sucessor->chave);
-
-    if (pai->direita == no){
-
-        paiSucessor->direita->esquerda = NULL;
-
-    }
-    else{
-
-        paiSucessor->esquerda = NULL;
-
-    }
-    if (pai->direita == no){
-
-        pai->direita = sucessor;
-        pai->direita->esquerda = no->esquerda;
-
-    }
-    else if (pai->esquerda == no){
-
-        pai->esquerda = sucessor;
-        pai->esquerda->direita = no->direita;
-        pai->esquerda->esquerda = no->esquerda;
-
-    }
-    if (sucessor->direita != NULL){
-
-        paiSucessor->direita = sucessor->direita;
-        sucessor->direita->direita = NULL;
-
-    }
-    desalocaNo(no);
+    No ** sucessor = menorSucessor(*no);
+    No * aux = (*sucessor)->direita;
+    (*sucessor)->esquerda = (*no)->esquerda;
+    (*sucessor)->direita = (*no)->direita;
+    No * auxRem = (*no);
+    (*no) = (*sucessor);
+    (*sucessor) = aux;
+    desalocaNo(auxRem);
 }
 
 
-No * menorSucessor(No * x){
+No ** menorSucessor(No * x){
     x = x->direita;
     while (x->esquerda != NULL){
         x = x->esquerda;
     }
-    return x;
+    return &(x);
 }
 
 void imprimiArv(Arvore *a){
@@ -483,41 +437,39 @@ void atualizarAltura (No * no){
 }
 
 void removeAVL(Arvore *arv, int num){
-    No *pai = buscaNoPaiAux(arv->raiz, num);
-    No* avo = buscaNoPaiAux(arv->raiz, pai->chave);
-    if (avo->direita == pai){
-        avo->direita = removeAVLAux(arv,arv->raiz, num, pai);
-    }else if (avo->esquerda == pai){
-        avo->esquerda = removeAVLAux(arv,arv->raiz, num, pai);
+
+    if (arv->raiz->chave == num && arv->raiz->esquerda == NULL && arv->raiz->direita == NULL){
+        free(arv->raiz);
     }
-
-
+    else {
+        removeAVLAux(&(arv->raiz), num);
+    }
 }
+ void removeAVLAux(No **no, int num){
 
-No * removeAVLAux(Arvore * arv, No *no, int num, No * pai){
 
+    if ((*no) != NULL){
+        if ((*no)->chave == num){
 
-    if (no != NULL){
-        if (no->chave == num){
-
-            if(no->direita == NULL && no->esquerda == NULL){
-                removeNoFolha(no, pai);
+            if((*no)->direita == NULL && (*no)->esquerda == NULL){
+                removeNoFolha(no);
             }
-            else if (no->direita == NULL || no->esquerda == NULL){
-                removeNoUmFilho(no, pai);
+            else if ((*no)->direita == NULL || (*no)->esquerda == NULL){
+                removeNoUmFilho(no);
             }
-            else if (no->direita != NULL && no->esquerda != NULL){
-                removeNoDoisFilhos(no, no, pai);
+            else if ((*no)->direita != NULL && (*no)->esquerda != NULL){
+                removeNoDoisFilhos(no); // atualizar a altura do pai do menor sucessor antes de atualizar altura do no
             }
-            atualizarAltura(pai);
-            checkAVL(&(pai));
-            return pai;
         }
-        else if (no->chave > num){
-            removeAVLAux(arv, no->esquerda, num, pai);
+        else if ((*no)->chave > num){
+            removeAVLAux(&((*no)->esquerda), num);
+            atualizarAltura(*no);
+            checkAVL(no);
         }
-        else if (no->chave < num){
-            removeAVLAux(arv, no->direita, num, pai);
+        else if ((*no)->chave < num){
+            removeAVLAux(&((*no)->direita), num);
+            atualizarAltura(*no);
+            checkAVL(no);
         }
     }
 }

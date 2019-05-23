@@ -14,7 +14,6 @@ No *alocaNo(){
 }
 
 void desalocaNo(No *no){
-    No *x = no;
     free(no);
 }
 
@@ -22,4 +21,12 @@ No* insereNo(int num){
     No *x = alocaNo();
     x->chave = num;
     return x;
+}
+
+void desalocaTodosNos(No *no){
+    if (no != NULL){
+        desalocaTodosNos(no->esquerda);
+        desalocaTodosNos(no->direita);
+        desalocaNo(no);
+    }
 }

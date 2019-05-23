@@ -47,13 +47,13 @@ void removeNo(Arvore *a, int num);
 
 void removeNoAux(No* x, int num);
 
-void removeNoFolha(No* no, No* pai);
+void removeNoFolha(No ** no);
 
-void removeNoUmFilho(No* no, No* pai);
+void removeNoUmFilho(No** no);
 
-void removeNoDoisFilhos(No* x, No* no, No* pai);
+void removeNoDoisFilhos( No** no);
 
-No * menorSucessor(No * x);
+No ** menorSucessor(No * x);
 
 void imprimiArv(Arvore *a);
 
@@ -87,7 +87,7 @@ void atualizarAltura (No * no);
 
 void removeAVL(Arvore *arv, int num);
 
-No * removeAVLAux(Arvore * arv, No *no, int num, No * pai);
+void  removeAVLAux( No **no, int num);
 
 
 #endif //ARVORE_ARVORE_H
