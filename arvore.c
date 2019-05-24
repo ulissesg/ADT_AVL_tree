@@ -229,23 +229,25 @@ void removeNoUmFilho(No** no){
 
 void removeNoDoisFilhos(No** no){
 
-    No ** sucessor = menorSucessor(*no);
-    No * aux = (*sucessor)->direita;
-    (*sucessor)->esquerda = (*no)->esquerda;
-    (*sucessor)->direita = (*no)->direita;
+    No ** menorSucessor1 = menorSucessor(no);
+    No * aux = (*menorSucessor1)->direita;
+    (*menorSucessor1)->esquerda = (*no)->esquerda;
+    if (((*no)->direita) != (*menorSucessor1)){
+        (*menorSucessor1)->direita = (*no)->direita;
+    }
     No * auxRem = (*no);
-    (*no) = (*sucessor);
-    (*sucessor) = aux;
+    (*no) = (*menorSucessor1);
+    (*menorSucessor1) = aux;
     desalocaNo(auxRem);
 }
 
 
-No ** menorSucessor(No * x){
-    x = x->direita;
-    while (x->esquerda != NULL){
-        x = x->esquerda;
+No ** menorSucessor(No ** x){
+    No ** no = &(*x)->direita;
+    while ((*no)->esquerda != NULL){
+        no = &(*no)->esquerda;
     }
-    return &(x);
+    return no;
 }
 
 void imprimiArv(Arvore *a){

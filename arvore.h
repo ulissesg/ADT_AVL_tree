@@ -53,7 +53,7 @@ void removeNoUmFilho(No** no);
 
 void removeNoDoisFilhos( No** no);
 
-No ** menorSucessor(No * x);
+No ** menorSucessor(No ** x);
 
 void imprimiArv(Arvore *a);
 
