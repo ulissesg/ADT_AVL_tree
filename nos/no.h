@@ -21,7 +21,4 @@ No *alocaNo();
 
 void desalocaNo(No *no);
 
-void desalocaTodosNos(No *no);
-
-
 #endif //ARVORE_NO_H

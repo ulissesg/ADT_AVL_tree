@@ -22,11 +22,3 @@ No* insereNo(int num){
     x->chave = num;
     return x;
 }
-
-void desalocaTodosNos(No *no){
-    if (no != NULL){
-        desalocaTodosNos(no->esquerda);
-        desalocaTodosNos(no->direita);
-        desalocaNo(no);
-    }
-}
